@@ -4,6 +4,9 @@ import hmac
 import base64
 import json
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
 
 web_api_id = os.environ.get('WEB_API_ID')
 web_api_key = os.environ.get('WEB_API_KEY')
@@ -30,30 +33,3 @@ def get_auth_headers(api_url, http_method='GET', payload_data=None):
     auth_value = 'HMAC {0}:{1}:{2}:{3}'.format(web_api_id, web_api_key, timestamp, hash_value)
     headers['Authorization'] = auth_value
     return headers
-
-
-# def get_auth_headers(api_url, http_method='GET', payload_data=None):
-
-#     # Generate a unique timestamp in milliseconds
-#     timestamp_ms = str(int(time.time() * 1000))
-
-#     # Create the signature
-#     signature = f"{timestamp_ms}{web_api_id}{web_api_key}{http_method}{api_url}"
-#     if payload_data:
-#         signature += json.dumps(payload_data)
-        
-#     signature = signature.encode('utf-8')
-#     hmac_signature = hmac.new(web_api_secret.encode('utf-8'), signature, hashlib.sha256).digest()
-#     base64_signature = base64.b64encode(hmac_signature).decode('utf-8')
-
-#     # Construct the Authorization header
-#     authorization_header = f'HMAC {web_api_id}:{web_api_key}:{timestamp_ms}:{base64_signature}'
-
-#     # Set up the headers
-#     headers = {
-#         'Accept-Encoding': 'gzip, deflate',
-#         'Content-type': 'application/json',
-#         'Authorization': authorization_header
-#     }
-
-#     return headers

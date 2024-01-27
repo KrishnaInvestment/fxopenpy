@@ -2,10 +2,8 @@ import requests
 from utils.fxopenheaders import get_auth_headers
 import server.urls as apiurl
 import json
-import requests
 
 
-        
 def get_tradeserver_info():
     url = apiurl.TRADESERVERINFO
 
@@ -24,5 +22,3 @@ def get_tradesession_info():
     response_text = json.loads(response.text)
 
     return response_text
-
-

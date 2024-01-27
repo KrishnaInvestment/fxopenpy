@@ -19,9 +19,7 @@ class HistoricalCurrencyData:
         response = requests.get(url, headers=get_auth_headers(url))
         return json.loads(response.text)
 
-    def get_currency_data_by_time(
-        self, symbol, periodicity, data_type, start_time, end_time=None
-    ):
+    def get_currency_data_by_time(self, symbol, periodicity, data_type, start_time, end_time=None):
         self.symbol, self.periodicity, self.data_type = symbol, periodicity, data_type
         end, start = self._get_timestamp(symbol, periodicity, data_type)
         start_time = self._validate_start_time(start_time, start)
@@ -30,9 +28,9 @@ class HistoricalCurrencyData:
         all_data = self._fetch_historical_data(start_time, end_time, periodicity)
         df = pd.concat(all_data)
         df["Timestamp"] = pd.to_datetime(df["Timestamp"], unit="ms")
-        df = df[
-            (df["Timestamp"] >= start_time) & (df["Timestamp"] <= end_time)
-        ].sort_values("Timestamp")
+        df = df[(df["Timestamp"] >= start_time) & (df["Timestamp"] <= end_time)].sort_values(
+            "Timestamp"
+        )
 
         return df
 
@@ -50,19 +48,13 @@ class HistoricalCurrencyData:
         while no_of_bars > 0:
             total_bars = min(no_of_bars, 1000)
             epoch_time_seconds = epoch_time_seconds - total_bars * time_period_seconds
-            all_data.append(
-                self._get_historical_data_df(epoch_time_seconds * 1000, total_bars)
-            )
+            all_data.append(self._get_historical_data_df(epoch_time_seconds * 1000, total_bars))
             no_of_bars -= len(all_data[-1])
             epoch_time_seconds = int(all_data[-1]["Timestamp"].iloc[0] / 1000)
 
         df = pd.concat(all_data)
         df["Timestamp"] = pd.to_datetime(df["Timestamp"], unit="ms")
-        df = (
-            df[df["Timestamp"] <= end_time]
-            .drop_duplicates("Timestamp")
-            .sort_values("Timestamp")
-        )
+        df = df[df["Timestamp"] <= end_time].drop_duplicates("Timestamp").sort_values("Timestamp")
         return df[-original_bars:]
 
     def _validate_start_time(self, start_time, start):
@@ -82,12 +74,8 @@ class HistoricalCurrencyData:
             epoch_time_milliseconds = int(start_time.timestamp() * 1000)
             no_of_bars = min(int(time_difference / time_period_seconds), 1000)
 
-            all_data.append(
-                self._get_historical_data_df(epoch_time_milliseconds, no_of_bars)
-            )
-            start_time += datetime.timedelta(
-                seconds=TIME_INTERVAL.get(periodicity) * 1000
-            )
+            all_data.append(self._get_historical_data_df(epoch_time_milliseconds, no_of_bars))
+            start_time += datetime.timedelta(seconds=TIME_INTERVAL.get(periodicity) * 1000)
             time_difference = (end_time - start_time).total_seconds()
 
         return all_data
@@ -107,10 +95,6 @@ class HistoricalCurrencyData:
         url = hist_urls.QUOTEHISTORY % (symbol, periodicity, trade_type)
         response = requests.get(url, headers=get_auth_headers(url))
         response_text = json.loads(response.text)
-        end_time = datetime.datetime.fromtimestamp(
-            response_text.get("AvailableTo") / 1000
-        )
-        start_time = datetime.datetime.fromtimestamp(
-            response_text.get("AvailableFrom") / 1000
-        )
+        end_time = datetime.datetime.fromtimestamp(response_text.get("AvailableTo") / 1000)
+        start_time = datetime.datetime.fromtimestamp(response_text.get("AvailableFrom") / 1000)
         return end_time, start_time

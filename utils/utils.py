@@ -40,7 +40,6 @@ class Price(RequstAPI):
     def get_all_bid_price(self):
         url = base_url.GET_ALL_PRICE
         response_text = super().request_api(url)
-        df = pd.DataFrame(response_text)
         response_text = response_text[0]
         return response_text.get("BestBid").get("Price")
     

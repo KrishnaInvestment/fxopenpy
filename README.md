@@ -11,8 +11,6 @@ pip3 install .
 ```
 Alternatively you can install the package using PIP
 ```
-pip install algoapi
-
 ```
 
 ## Usage
@@ -21,7 +19,7 @@ pip install algoapi
 ```python
 from trades.open_position import Position
 
-#to avoid entering the information each time maintain .env with variables
+#Please maintain .env file with variables below
 WEB_API_ID="WEB_API_ID"
 WEB_API_KEY="WEB_API_KEY"
 WEB_API_SECRET="WEB_API_SECRET"

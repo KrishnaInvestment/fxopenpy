@@ -4,18 +4,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_URL = os.environ.get('API_URL')
+API_URL = os.environ.get("API_URL")
 
-#Price
+# Price
 GET_LATEST_PRICE = API_URL + "/api/v2/tick/%s"
 GET_ALL_PRICE = API_URL + "/api/v2/tick"
 
-#Currency
+# Currency
 CURRENCY = API_URL + "/api/v2/currency"
 CURRENCYTYPE = API_URL + "/api/v2/currencytype"
 
-#Symbol
+# Symbol
 SYMBOL = API_URL + "/api/v2/symbol"
 
-#PipSize
+# PipSize
 PIPSIZE = API_URL + "/api/v2/pipsvalue"
